@@ -146,7 +146,8 @@ function handleCardClick(event) {
 function startGame() {
   score = 0;
   updateScore();
-  createDivsForColors(shuffle(COLORS));
+  // createDivsForColors(shuffle(COLORS));
+  createDivsForColors(shuffle(createRandomColors(6)));
   restartButton.disabled = false;
 }
 
@@ -164,6 +165,21 @@ restartButton.addEventListener('click', function(event) {
   event.target.disabled = true;
   resetGame();
 });
+
+// random colors
+function createRandomColors(numColors) {
+  const colors = [];
+  while (numColors > 0) {
+    const red = Math.floor(Math.random() * 256);
+    const green = Math.floor(Math.random() * 256);
+    const blue = Math.floor(Math.random() * 256);
+    const color = `rgb(${red},${green},${blue})`;
+    colors.push(color);
+    colors.push(color);
+    numColors--;
+  }
+  return colors;
+}
 
 
 // when the DOM loads
