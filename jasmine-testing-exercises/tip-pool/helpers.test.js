@@ -10,46 +10,6 @@ describe("Helpers test (with setup and tear-down)", function() {
     });
   
     //
-    // calculateTipPercent
-    //
-    it('calculate tip percentage should be correct', function () {
-      expect(calculateTipPercent(100, 15)).toEqual(15);
-      expect(calculateTipPercent(150, 30)).toEqual(20);
-      expect(calculateTipPercent(66.67, 30.50)).toEqual(46);
-      expect(calculateTipPercent(100, 0)).toEqual(0);
-
-      
-    });
-
-    it('calculate tip percentage with zeros', function () {
-      // these should probably throw errors instead of returning NaN or Infinity
-      expect(calculateTipPercent(0, 0)).toEqual(NaN);
-      expect(calculateTipPercent(0, 1)).toEqual(Infinity);
-    });
-
-    //
-    // appendTd
-    //
-    it('TD appended to DOM', function () {
-      appendTd(newTr, 'Hello World');
-      expect(newTr.childElementCount).toEqual(1);
-
-      appendTd(newTr, 'Hola Mundo');
-      appendTd(newTr, 'Bonjour le Monde');
-      expect(newTr.childElementCount).toEqual(3);
-    });
-
-    it('TD appended to DOM with Empty String', function () {
-      appendTd(newTr, '');
-      expect(newTr.childElementCount).toEqual(1);
-
-      // these should probably throw errors
-      appendTd(newTr, null);
-      appendTd(newTr);
-      expect(newTr.childElementCount).toEqual(3);
-    });
-    
-    //
     // sumPaymentTotal
     //
     function createPayment(billAmt, tipAmt) {
@@ -99,6 +59,67 @@ describe("Helpers test (with setup and tear-down)", function() {
       allPayments.payment1 = createPayment(100, -15);
       checkTotal(100, -15, -15);
     });
+
+    //
+    // calculateTipPercent
+    //
+    it('calculate tip percentage should be correct', function () {
+      expect(calculateTipPercent(100, 15)).toEqual(15);
+      expect(calculateTipPercent(150, 30)).toEqual(20);
+      expect(calculateTipPercent(66.67, 30.50)).toEqual(46);
+      expect(calculateTipPercent(100, 0)).toEqual(0);
+
+      
+    });
+
+    it('calculate tip percentage with zeros', function () {
+      // these should probably throw errors instead of returning NaN or Infinity
+      expect(calculateTipPercent(0, 0)).toEqual(NaN);
+      expect(calculateTipPercent(0, 1)).toEqual(Infinity);
+    });
+
+    //
+    // appendTd
+    //
+    it('TD appended to DOM', function () {
+      appendTd(newTr, 'Hello World');
+      expect(newTr.childElementCount).toEqual(1);
+
+      appendTd(newTr, 'Hola Mundo');
+      appendTd(newTr, 'Bonjour le Monde');
+      expect(newTr.childElementCount).toEqual(3);
+    });
+
+    it('TD appended to DOM with Empty String', function () {
+      appendTd(newTr, '');
+      expect(newTr.childElementCount).toEqual(1);
+
+      // these should probably throw errors
+      appendTd(newTr, null);
+      appendTd(newTr);
+      expect(newTr.childElementCount).toEqual(3);
+    });
+    
+    //
+    // appendDeleteBtn
+    //
+    it('Simple Append Delete btn', function () {
+      appendDeleteBtn(newTr);
+      expect(newTr.childElementCount).toEqual(1);
+      expect(document.querySelectorAll('.deleteBtn').length).toEqual(1);
+    });
+
+    it('append delete with others', function () {
+      appendTd(newTr, '100');
+      appendTd(newTr, '15');
+      appendTd(newTr, '15');
+      expect(newTr.childElementCount).toEqual(3);
+
+      appendDeleteBtn(newTr);
+      expect(newTr.childElementCount).toEqual(4);
+      expect(document.querySelectorAll('.deleteBtn').length).toEqual(1);
+    })
+    
   
     afterEach(function() {
       // teardown logic

@@ -18,7 +18,7 @@ describe("Payments test (with setup and tear-down)", function() {
       expect(paymentTbody.childElementCount).toEqual(1);
 
       const paymentTDs = paymentTbody.querySelectorAll('tr > td');
-      expect(paymentTDs.length).toEqual(3);
+      expect(paymentTDs.length).toEqual(4);
       expect(paymentTDs[0].innerText).toEqual('$' + payment.billAmt);
       expect(paymentTDs[1].innerText).toEqual('$' + payment.tipAmt);
       expect(paymentTDs[2].innerText).toEqual(payment.tipPercent + '%');

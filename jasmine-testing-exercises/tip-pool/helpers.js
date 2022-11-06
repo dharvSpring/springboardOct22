@@ -24,3 +24,12 @@ function appendTd(tr, value) {
 
   tr.append(newTd);
 }
+
+// create a ‘td’ with the value ‘X’, when clicked it will delete the table row
+function appendDeleteBtn(tr) {
+  const newTd = document.createElement('td');
+  newTd.classList.add('deleteBtn');
+  newTd.innerText = 'X';
+
+  tr.append(newTd);
+}

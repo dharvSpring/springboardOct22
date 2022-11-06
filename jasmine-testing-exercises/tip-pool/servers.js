@@ -8,6 +8,17 @@ let serverId = 0;
 
 serverForm.addEventListener('submit', submitServerInfo);
 
+// Delete button listener
+serverTbody.addEventListener('click', function(event) {
+    if (event.target.classList.contains('deleteBtn')) {
+      const tr = event.target.parentElement;
+      delete allServers[tr.id];
+      tr.remove();
+      // updateSummary(); -- only update Summary if Payments change
+      updateServerTable();
+    }
+})
+
 // create server object and add to allServers, update html and reset input
 function submitServerInfo(evt) {
   if (evt) evt.preventDefault(); // when running tests there is no event
@@ -38,6 +49,7 @@ function updateServerTable() {
 
     appendTd(newTr, curServer.serverName);
     appendTd(newTr, '$' + tipAverage.toFixed(2));
+    appendDeleteBtn(newTr);
 
     serverTbody.append(newTr);
   }
