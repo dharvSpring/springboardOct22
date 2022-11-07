@@ -1,4 +1,6 @@
-
+//
+// foreach, map, filter
+//
 function myForEach(arr, callback) {
     for (let i = 0; i < arr.length; i++) {
         callback(arr[i], i, arr);
@@ -46,3 +48,48 @@ console.log(myFilter(nums, function(n, i) {
 console.log(myFilter(nums, function(n, i) {
     return n > 3;
 }))
+
+//
+// some, every
+//
+function mySome(arr, callback) {
+    for (let i = 0; i < arr.length; i++) {
+        if(callback(arr[i], i, arr)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+console.log("Any evens " + mySome(nums, function (n,i) {
+    return n % 2 == 0;
+}));
+
+console.log("Any value smaller than index " + mySome(nums, function (n,i) {
+    return n < i;
+}));
+
+console.log("Any string " + mySome(nums, function (n) {
+    return typeof n === 'string';
+}));
+
+function myEvery(arr, callback) {
+    for (let i = 0; i < arr.length; i++) {
+        if(!callback(arr[i], i, arr)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+console.log(myEvery(nums, function (n,i) {
+    return n % 2 === 0;
+}));
+
+console.log(myEvery(nums, function (n,i) {
+    return n > i;
+}));
+
+console.log(myEvery(nums, function (n) {
+    return typeof n === 'number';
+}));
