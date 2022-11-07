@@ -130,3 +130,40 @@ console.log(myFindIndex(nums, function(n) {
 console.log(myFindIndex(nums, function(n) {
     return n < 0;
 }));
+
+
+//
+// reduce
+//
+function myReduce(arr, callback, initialVal) {
+    let start = 1;
+    let accumulator = arr[0];
+    if (initialVal) {
+        start = 0;
+        accumulator = initialVal;
+    }
+
+    for (let i = start; i < arr.length; i++) {
+        accumulator = callback(accumulator, arr[i]);
+    }
+    return accumulator;
+}
+
+
+console.log(myReduce(nums, function(sum, n) {
+    return sum + n;
+}))
+
+console.log(myReduce(nums, function(sum, n) {
+    return sum + n;
+}, 100))
+
+names = ['alice', 'bob', 'calvin', 'dave'];
+
+console.log(myReduce(names, function(concat, name) {
+    return `${concat} ${name}`;
+}))
+
+console.log(myReduce(names, function(concat, name) {
+    return `${concat} ${name}`;
+}, 'i like'))
