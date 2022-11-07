@@ -93,3 +93,40 @@ console.log(myEvery(nums, function (n,i) {
 console.log(myEvery(nums, function (n) {
     return typeof n === 'number';
 }));
+
+
+//
+// find, findIndex
+//
+function myFind(arr, callback) {
+    for (let i = 0; i < arr.length; i++) {
+        if (callback(arr[i], i, arr)) {
+            return arr[i];
+        }
+    }
+}
+
+console.log(myFind(nums, function(n) {
+    return n % 2 == 0;
+}));
+
+console.log(myFind(nums, function(n) {
+    return n < 0;
+}));
+
+function myFindIndex(arr, callback) {
+    for (let i = 0; i < arr.length; i++) {
+        if (callback(arr[i], i, arr)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+console.log(myFindIndex(nums, function(n) {
+    return n % 5 == 0;
+}));
+
+console.log(myFindIndex(nums, function(n) {
+    return n < 0;
+}));
