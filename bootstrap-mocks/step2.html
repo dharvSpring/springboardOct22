@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Bootstrap Sample 2</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <script src='step2.js'></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">LOGO</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav mr-auto">
+            <!-- empty -->
+        </div>
+        <div class="navbar-nav">
+            <a class="nav-link active" href="#">Home</a>
+            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="#">About Us</a>
+            <a class="nav-link" href="#">Messages <span class="badge badge-primary">12</span></a>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <h1 class="py-2">Dashboard:</h1>
+        <table class="table table-striped">
+            <thead>
+                <td class="font-weight-bold">Name</td>
+                <td class="font-weight-bold">Team</td>
+                <td class="font-weight-bold">All Star</td>
+                <td class="font-weight-bold">Remove</td>
+            </thead>
+            <tr>
+                <td>Steph</td>
+                <td>Warriors</td>
+                <td>Yes</td>
+                <td><button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+            <tr>
+                <td>Lebron</td>
+                <td>Cavaliers</td>
+                <td>Yes</td>
+                <td><button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+            <tr>
+                <td>Dwayne</td>
+                <td>Heat</td>
+                <td>Yes</td>
+                <td><button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+            <tr>
+                <td>Kobe</td>
+                <td>Lakers</td>
+                <td>Yes <span class="badge badge-warning">Last</span></td>
+                <td><button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+            <tr>
+                <td>Isaiah</td>
+                <td>Celtics</td>
+                <td>Yes <span class="badge badge-success">First</span></td>
+                <td><button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+        </table>
+
+        <hr/>
+
+        <h2>Todos:</h1>
+        <div class="alert alert-success m-0 p-2 rounded-0" role="alert">
+            Feel good about Bootrap
+        </div>
+        <div class="alert alert-primary m-0 p-2 rounded-0" role="alert">
+            Feel informed about Bootrap
+        </div>
+        <div class="alert alert-warning m-0 p-2 rounded-0" role="alert">
+            Feel warned about Bootrap
+        </div>
+        <div class="alert alert-warning m-0 p-2 rounded-0" role="alert">
+            Maybe I should read the docs...
+        </div>
+        <div class="alert alert-danger m-0 p-2 rounded-0" role="alert">
+            Danger zone
+        </div>
+        <div class="alert alert-danger m-0 p-2 rounded-0" role="alert">
+            I should really read the docs...
+        </div>
+    </div>
+</body>
+</html>
