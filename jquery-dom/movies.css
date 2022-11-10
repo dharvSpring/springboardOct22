@@ -1,0 +1,85 @@
+body {
+    font-family: sans-serif;
+    margin: 25px;
+}
+
+h1 {
+    font-size: xx-large;
+}
+
+/* Input styles */
+
+form > input, label {
+    display: block;
+}
+
+label {
+    font-size: larger;
+    font-weight: bold;
+}
+
+input {
+    width: 30%;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+input[type='submit'] {
+    width: 20%;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: large;
+    color: white;
+    background-color: #d40078;
+}
+
+/* Content styles */
+
+#movieList {
+    margin-top: 20px;
+}
+ 
+#movieList > span {
+    border: 1px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.title, .rating {
+    font-size: larger;
+    margin: 15px;
+    display: inline-block;
+
+    /* border: 3px;
+    border-style: dotted;
+    border-color: hotpink; */
+}
+
+.title {
+    width: 50%;
+}
+
+.rating {
+    text-align: center;
+    width: 20%;
+}
+
+button {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 50px;
+    
+    font-weight: bolder;
+    font-size: medium;
+    color: #d40078;
+    background-color: white;
+    width: 3%;
+}
+
+button:hover {
+    color: white;
+    background-color: #d40078;
+}
