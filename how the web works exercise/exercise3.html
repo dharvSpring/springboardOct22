@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<!--
+Part Three: Explore Dev Tools
+Build a very simple HTML form that uses the GET method (it can use the same page URL for the action) when the form is submitted.
+
+Add a field or two to the form and, after submitting it,
+explore in Chrome Developer tools how you can view the request and response headers.
+
+Edit the page to change the form type to POST, refresh in the browser and re-submit.
+Do you still see the field in the query string?
+Explore in Chrome how you can view the request and response headers, as well as the form data.
+-->
+
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <h1>GET Form</h1>
+    <form method="get">
+        <label for="name">Name</label>
+        <input name="name" type="text">
+        <br />
+
+        <label for="favColor">Favorite Color</label>
+        <input name="favColor" type="text">
+        <br />
+
+        <input type="submit">
+    </form>
+
+    <h1>POST Form</h1>
+    <form method="post">
+        <label for="name2">Name</label>
+        <input name="name2" type="text">
+        <br />
+
+        <label for="color2">Favorite Color</label>
+        <input name="color2" type="text">
+        <br />
+
+        <input type="submit">
+    </form>
+    
+</body>
+</html>
