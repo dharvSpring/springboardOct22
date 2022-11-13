@@ -5,7 +5,7 @@ At times, it’s useful for your JavaScript to look at the URL of the browser wi
 
 Try some of the code examples in the Chrome Console so that you can get comfortable with the basic methods and properties for instances of the URL class.
 
-[code]
+```
 let myURL = new URL(window.location.href)
 console.log(myURL.href)
 let search = myURL.search
@@ -15,4 +15,4 @@ console.log(myURL.toJSON())
 let newURL = new URL('https://google.com/images')
 console.log(newURL.hostname)
 console.log(newURL.pathname)
-[/code]
+```
