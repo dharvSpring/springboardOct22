@@ -1,0 +1,33 @@
+body {
+    background-color: black;
+    color: whitesmoke;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+input {
+    width: 20%;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: large;
+}
+
+input[type='submit'], input[type='button'] {
+    font-weight: bold;
+    background-color: darkslategray;
+    color: whitesmoke;
+}
+
+input[type='button'] {
+    background-color: crimson;
+}
+
+input[type='submit']:hover {
+    background-color: lightslategray;
+    color: black;
+}
+
+input[type='button']:hover {
+    background-color: lightpink;
+    color: crimson;
+}
