@@ -83,6 +83,16 @@ class StoryList {
 
     return created;
   }
+
+  /** Delete story data from API
+   * - user - the current user
+   * - storyId - story to delete
+   *
+   * Returns the new Story instance
+   */
+  async deleteStory(user, storyId) {
+
+  }
 }
 
 
@@ -158,7 +168,7 @@ class User {
     });
 
     let { user } = response.data;
-
+    console.log(response.data.token);
     return new User(
       {
         username: user.username,
@@ -199,5 +209,30 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  isFavorite(storyId) {
+    return this.favorites.some(curStory => curStory.storyId === storyId);
+  }
+
+  async addFavorite(story) {
+    this.favorites.push(story);
+    this._toggleFavorite('add', story);
+  }
+
+  async removeFavorite(story) {
+    this.favorites = this.favorites.filter((curStory) => (curStory.storyId !== story.storyId));
+    this._toggleFavorite('remove', story);
+  }
+
+  async _toggleFavorite(addRem, story) {
+    const storyUrl = `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`;
+    await axios({
+      url: storyUrl,
+      method: (addRem === "add" ? 'POST' : 'DELETE'),
+      data: {
+        token: this.loginToken,
+      },
+    });
   }
 }

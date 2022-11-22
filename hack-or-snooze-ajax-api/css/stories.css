@@ -37,3 +37,13 @@
 .story-user {
   display: block;
 }
+
+.far:hover {
+  color: purple;
+  font-size: 0.85rem;
+}
+
+.fas:hover {
+  color: red;
+  font-size: 0.85rem;
+}

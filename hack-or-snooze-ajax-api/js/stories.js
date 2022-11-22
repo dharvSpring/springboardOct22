@@ -21,10 +21,11 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
-
   const hostName = story.getHostName(story.url);
+  const isFavorite = (currentUser !== undefined) ? currentUser.isFavorite(story.storyId) : false;
   return $(`
       <li id="${story.storyId}">
+        <i ${currentUser === undefined ? 'style="display: none"' : ''} class="${isFavorite ? 'fas' : 'far'} fa-star"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -63,4 +64,25 @@ async function submitStory(event) {
   navAllStories(event);
 }
 
+async function toggleFavorite(event) {
+  const $star = $(event.target);
+  const $storyLi = $star.closest('li');
+  const storyId = $storyLi.attr('id');
+
+  const clickedStory = storyList.stories.find((curStory) => (curStory.storyId === storyId));
+  console.log(clickedStory);
+
+  if (currentUser.isFavorite(storyId)) {
+    await currentUser.removeFavorite(clickedStory);
+    $star.removeClass('fas');
+    $star.addClass('far');
+
+  } else {
+    await currentUser.addFavorite(clickedStory);
+    $star.removeClass('far');
+    $star.addClass('fas');
+  }
+}
+
 $submitForm.on('submit', submitStory);
+$allStoriesList.on('click', '.fa-star', toggleFavorite);
