@@ -6,6 +6,8 @@ const $body = $("body");
 
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
+const $favStoriesList = $('#fav-stories-list');
+const $userStoriesList = $('#user-stories-list');
 
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
@@ -24,6 +26,8 @@ const $navSubmit = $("#nav-submit");
 function hidePageComponents() {
   const components = [
     $allStoriesList,
+    $favStoriesList,
+    $userStoriesList,
     $loginForm,
     $signupForm,
     $submitForm,

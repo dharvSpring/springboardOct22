@@ -91,7 +91,17 @@ class StoryList {
    * Returns the new Story instance
    */
   async deleteStory(user, storyId) {
+    await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: 'DELETE',
+      data: {
+        token: user.loginToken,
+      },
+    });
 
+    this.stories = this.stories.filter((curStory) => (curStory.storyId !== storyId));
+    user.favorites = user.favorites.filter((curStory) => (curStory.storyId !== storyId));
+    user.ownStories = user.ownStories.filter((curStory) => (curStory.storyId !== storyId));
   }
 }
 
@@ -209,6 +219,10 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  isMyStory(storyId) {
+    return this.ownStories.some(curStory => curStory.storyId === storyId);
   }
 
   isFavorite(storyId) {
