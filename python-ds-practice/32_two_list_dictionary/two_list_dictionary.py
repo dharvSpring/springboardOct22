@@ -14,4 +14,9 @@ def two_list_dictionary(keys, values):
 
         >>> two_list_dictionary(['a', 'b', 'c'], [1, 2, 3, 4])
         {'a': 1, 'b': 2, 'c': 3}
-   """
+    """
+    ret_dict = {}
+    num_vals = len(values)
+    for idx in range(len(keys)):
+        ret_dict[keys[idx]] = values[idx] if num_vals > idx else None
+    return ret_dict

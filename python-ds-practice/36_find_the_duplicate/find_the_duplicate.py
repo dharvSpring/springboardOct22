@@ -13,3 +13,10 @@ def find_the_duplicate(nums):
         >>> find_the_duplicate([2, 1, 3, 4]) is None
         True
     """
+    seen = set()
+    for n in nums:
+        if seen.isdisjoint({n}):
+            seen.add(n)
+        else:
+            return n
+    return None

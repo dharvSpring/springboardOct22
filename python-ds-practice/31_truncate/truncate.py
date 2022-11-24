@@ -24,3 +24,10 @@ def truncate(phrase, n):
         >>> truncate("Woah", 3)
         '...'
     """
+    if n < 3:
+        return 'Truncation must be at least 3 characters.'
+    
+    if len(phrase) < n:
+        return phrase
+
+    return phrase[0:n-3] + '...'

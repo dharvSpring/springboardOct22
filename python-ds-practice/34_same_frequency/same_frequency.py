@@ -10,3 +10,10 @@ def same_frequency(num1, num2):
         >>> same_frequency(1212, 2211)
         True
     """
+    def _countFreq(string):
+        counts = {}
+        for char in string:
+            counts[char] = counts.get(char, 0) + 1
+        return counts
+    
+    return _countFreq(str(num1)) == _countFreq(str(num2))
