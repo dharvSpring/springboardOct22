@@ -1,0 +1,51 @@
+body {
+    margin: 10px;
+}
+
+h1, h2 {
+    color: purple;
+}
+
+form {
+    font-size: large;
+}
+
+label, input {
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+label {
+    width: 10%;
+    text-align: right;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+input {
+    width: 30%;
+}
+
+input[type='submit'] {
+    background-color: purple;
+    color: white;
+    font-size: large;
+    font-weight: bolder;
+    margin-left: 10%;
+}
+
+input[type='submit']:hover {
+    background-color: whitesmoke;
+    color: purple;
+}
+
+#story {
+    font-size: large;
+    padding: 10px;
+}
+
+.answer {
+    font-weight: bold;
+}

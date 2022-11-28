@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Madlibs!</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/static/app.css'>
+</head>
+<body>
+    <h1>Madlibs</h1>
+
+    <form id="answers" action="">
+        {% for prompt in prompts %}
+        <label for="{{prompt}}">{{prompt}}</label>
+        <input type="text" name="{{prompt}}"/>
+        <br />
+        {% endfor %}
+        <input type="submit"/>
+    </form>
+
+    {% if story != None %}
+    <section>
+        <h2>Your Story</h2>
+        <div id="story">
+            {{story}}
+        </div>
+        <div>
+            <a href="/">Clear!</a>
+        </div>
+    </section>
+    {% endif %}
+</body>
+</html>
