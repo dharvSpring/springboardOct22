@@ -1,0 +1,14 @@
+body {
+    font-size: large;
+    margin: 1rem;
+}
+
+button {
+    padding: 5px;
+}
+
+.alert {
+    background-color: rgba(255, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 1rem;
+}
