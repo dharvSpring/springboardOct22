@@ -12,3 +12,7 @@ button {
     padding: 1rem;
     border-radius: 1rem;
 }
+
+.question {
+    font-weight: bold;
+}

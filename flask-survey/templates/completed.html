@@ -2,4 +2,12 @@
 
 {% block content %}
 <h2>Thank you for completing our {{ survey.title }}</h2>
+
+<ul>
+    {% for question in survey.questions %}
+    <li><span class="question">{{ question.question }}</span> 
+        <span class="answer">{{ responses[loop.index0] }}</span>
+    </li>
+    {% endfor%}
+</ul>
 {% endblock %}
