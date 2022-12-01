@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "password1"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-debug = DebugToolbarExtension(app)
+# debug = DebugToolbarExtension(app)
 
 def get_board(new=False):
     """Return the board for the session"""
@@ -23,7 +23,7 @@ def get_board(new=False):
 @app.route("/")
 def show_home():
     """Load Default page and meta data"""
-    return render_template("boggle.html", board=[])
+    return render_template("start.html")
 
 @app.route("/start")
 def start():

@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 
+{% block sidebar %}
+<h3>Highscore: <span id="highscore">-</span></h3>
+<h3>Game Count: <span id="count">-</span></h3>
+<h3>Score: <span id="score">0</span></h3>
+<h3>Time: <span id="timer">60</span></h3>
+
+<form id="start" action="/start" style="display: none;">
+    <button>Restart!</button>
+</form>
+
+<div id="words">
+</div>
+{% endblock %}
+
 {% block content %}
 <table id="board">
     <tbody>
@@ -12,4 +26,8 @@
     {% endfor %}
     </tbody>
 </table>
+<form id="guess-form" style="display: none;">
+    <input name="guess" type="text" placeholder="What's your guess?">
+    <button>Submit</button>
+</form>
 {% endblock%}

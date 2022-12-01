@@ -10,6 +10,8 @@ const $highscore = $('#highscore');
 const $count = $('#count');
 const $timer = $('#timer');
 
+const $words = $('#words');
+
 let game = undefined;
 let user = undefined;
 
@@ -79,19 +81,22 @@ class BoggleGame {
             if (data.result == 'ok') {
                 this.score += curGuess.length;
                 $score.text(this.score);
+                $words.append(`<p class="word">${curGuess}</p>`);
             }
 
             console.log(data.result);
-            displayMessage(`${curGuess} ${responseMessages[data.result]}`);
+            if (!this.isOver()) {
+                displayMessage(`${curGuess} ${responseMessages[data.result]}`);
+            }
         }
     }
 }
 
 function displayMessage(msg) {
-    $('#demo-alert').text(msg);
+    $('#msg-alert').text(msg);
 }
 
-async function updateTimer(game) {
+function updateTimer(game) {
     game.seconds -= 1;
     $timer.text(game.seconds);
     if (game.seconds <= 0) {
@@ -107,6 +112,7 @@ function submitGuess(event) {
     event.preventDefault();
     const curGuess = $guess.val();
 
+    // boggle requires words be >= 3 letters
     if (curGuess.length < 3) {
         displayMessage(`${curGuess} is too short!`);
     } else {
@@ -115,26 +121,23 @@ function submitGuess(event) {
     }
 }
 
-async function startGame(event) {
-    $startGame.hide();
-    $guessForm.show();
-
-    await axios.get('/start');
-
-    game = new BoggleGame(user);
-    intervalId = setInterval(updateTimer, 1000, game);
-    game.start(intervalId);
-}
-
-async function load() {
+async function initialize() {
     const {data: {highscore, gameCount}} = await axios.get(scoreURL);
-    user = new BoggleUser(highscore, gameCount);
+
+    // if $guessForm exists we are playing the game!
+    if ($guessForm != undefined) {
+        user = new BoggleUser(highscore, gameCount);
+        game = new BoggleGame(user);
+        intervalId = setInterval(updateTimer, 1000, game);
+        game.start(intervalId);
+
+        $guessForm.on('submit', submitGuess);
+        $guessForm.show();
+        $guess.focus();
+    }
+
     $highscore.text(highscore);
     $count.text(gameCount);
 }
 
-
-$guessForm.on('submit', submitGuess);
-$startGame.on('click', startGame);
-
-$(load);
+$(initialize);

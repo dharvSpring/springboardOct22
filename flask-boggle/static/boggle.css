@@ -1,11 +1,20 @@
 body {
     background-color: powderblue;
     text-align: center;
-    font-family: Helvetica, sans-serif
+    font-family: Helvetica, sans-serif;
+    display: flex;
+    padding: 3rem;
+}
+
+h1, h3 {
+    color: midnightblue;
+}
+
+#sidebar {
+    width: 35%;
 }
 
 #content {
-    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -20,19 +29,47 @@ td {
     width: 3rem;
     height: 3rem;
     border-collapse: collapse;
-    border: 2px solid black;
+    border: 2px solid midnightblue;
     border-radius: 1rem;
+    color: darkblue;
+    background-color: whitesmoke;
 }
 
 #guess-form {
     margin: 1rem;
 }
 
+#words {
+    margin-top: 0.5rem;
+    font-size: large;
+}
+
+.word {
+    padding: 2px;
+    margin: 0px;
+}
+
 input, button {
-    padding: 1rem;
+    padding: 0.5rem;
+    font-size: large;
+}
+
+#start > button {
+    background-color: royalblue;
+    color: whitesmoke;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-radius: 0.5rem;
+}
+
+#start > button:hover {
+    background-color: whitesmoke;
+    color: royalblue;
 }
 
 #alerts {
-    padding: 1rem;
+    padding: 2rem;
+    font-size: x-large;
     font-weight: bold;
+    color: darkblue;
 }

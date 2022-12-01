@@ -4,35 +4,22 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Boggle!</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel='stylesheet' type='text/css' media='screen' href='/static/boggle.css'>
 </head>
 <body>
-    <h1>Boggle!</h1>
-    <section id="content">
-        {% block content %}
+    
+    <div id="sidebar">
+        <h1>Boggle!</h1>
+        {% block sidebar %}
         {% endblock %}
-    </section>
-    <!-- <div id="flash">
-        {% for msg in get_flashed_messages() %}
-        <p><span class="alert">{{ msg }}</span></p>
-        {% endfor %}
-    </div> -->
-    <section id="meta">
-        <h2>Score: <span id="score">0</span></h2>
-        <h2>Highscore: <span id="highscore">-</span></h2>
-        <h2>Game Count: <span id="count">-</span></h2>
-        <h2>Time: <span id="timer">60</span></h2>
-    </section>
-
-    <button id="start">Start</button>
-    <form id="guess-form" action="/guess" method="POST" style="display: none;">
-        <input name="guess" type="text" placeholder="What's your guess?">
-        <button>Submit</button>
-    </form>
-
-    <div id="alerts">
-        <p><span id="demo-alert" class="alert"></span></p>
+    </div>
+    <div id="content">
+        {% block content %}
+        {% endblock %}        
+        <div id="alerts">
+            <span id="msg-alert" class="alert"></span>
+        </div>
     </div>
 
     <script src="https://unpkg.com/jquery"></script>
