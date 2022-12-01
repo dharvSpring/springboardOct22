@@ -1,0 +1,38 @@
+body {
+    background-color: powderblue;
+    text-align: center;
+    font-family: Helvetica, sans-serif
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board {
+    font-size: xx-large;
+    table-layout: fixed;
+}
+
+td {
+    padding: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-collapse: collapse;
+    border: 2px solid black;
+    border-radius: 1rem;
+}
+
+#guess-form {
+    margin: 1rem;
+}
+
+input, button {
+    padding: 1rem;
+}
+
+#alerts {
+    padding: 1rem;
+    font-weight: bold;
+}
