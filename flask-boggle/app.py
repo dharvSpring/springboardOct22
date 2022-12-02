@@ -3,7 +3,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from boggle import Boggle
 
 boggle_game = Boggle()
-BOARD_KEY = "BOGGLE_BOARD"
+BOARD_KEY = "BOARD"
 HS_KEY = "HIGHSCORE"
 COUNT_KEY = "NUM_GAMES"
 GUESS_KEY = "GUESSES"
@@ -16,6 +16,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 def get_board(new=False):
     """Return the board for the session"""
+
     if new:
         session[BOARD_KEY] = boggle_game.make_board()
     return session[BOARD_KEY]
@@ -23,12 +24,14 @@ def get_board(new=False):
 @app.route("/")
 def show_home():
     """Load Default page and meta data"""
+
     return render_template("start.html")
 
 @app.route("/start")
 def start():
     """Start or restart the game"""
-    session[BOARD_KEY] = boggle_game.make_board()
+
+    get_board(new=True)
     session[GUESS_KEY] = None
 
     return redirect("/boggle")
@@ -36,17 +39,26 @@ def start():
 @app.route("/boggle")
 def show_board():
     """Display the board to the user"""
+
     return render_template("boggle.html", board=get_board())
 
-@app.route("/guess", methods=["POST"])
+@app.route("/guess")
 def make_guess():
-    """Check the user's guess and return json response"""
-    guess = request.form.get('guess')
+    """Check the guess and return json response"""
+
+    guess = request.args.get('guess')
     result = check_guess(guess)
     ret_val = {'result': result}
     return jsonify(ret_val)
 
 def check_guess(guess):
+    """
+    Compare the guess vs the board
+    
+    Previous guesses are reported
+    """
+
+    # check previous guesses for this game
     guesses = session.get(GUESS_KEY)
     if guesses == None:
         guesses = set()
@@ -63,12 +75,14 @@ def check_guess(guess):
 @app.route("/score")
 def get_score():
     """Returns the highscore and gameCount from the session"""
+
     ret_val = {'highscore': session.get(HS_KEY, 0), 'gameCount': session.get(COUNT_KEY, 0)}
     return jsonify(ret_val)
 
 @app.route("/score", methods=["POST"])
 def set_score():
     """Compares new score against high score and increments number of games played"""
+
     num_games = session.get(COUNT_KEY, 0) + 1
     session[COUNT_KEY] = num_games
 

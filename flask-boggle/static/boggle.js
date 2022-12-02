@@ -74,9 +74,9 @@ class BoggleGame {
         if (this.isOver()) {
             displayMessage('Game Over!');
         } else {
-            const guessFormData = new FormData();
-            guessFormData.append('guess', curGuess);
-            const {data} = await axios.post(guessURL, guessFormData);
+            // const guessFormData = new FormData();
+            // guessFormData.append('guess', curGuess);
+            const {data} = await axios.get(`${guessURL}?guess=${curGuess}`);
             
             if (data.result == 'ok') {
                 this.score += curGuess.length;
