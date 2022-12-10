@@ -1,0 +1,39 @@
+# https://app.quickdatabasediagrams.com/#/
+
+# Part Two: Craigslist
+# Design a schema for Craigslist! Your schema should keep track of the following
+
+# The region of the craigslist post (San Francisco, Atlanta, Seattle, etc)
+# Users and preferred region
+# Posts: contains title, text, the user who has posted, the location of the posting, the region of the posting
+# Categories that each post belongs to
+
+Post
+-
+id PK serial
+owner FK >- User.id
+region FK >- Region.id
+location text
+title text
+text text
+
+User
+-
+id PK serial
+username text
+preferred_region FK >- Region.id
+
+Category
+-
+id PK serial
+name text index
+
+Post_Categories
+-
+post_id FK >-< Post.id
+cat_id FK >-< Category.id
+
+Region
+-
+id PK serial
+name text index
