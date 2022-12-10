@@ -1,0 +1,41 @@
+# https://app.quickdatabasediagrams.com/#/
+
+# Part One: Medical Center
+# Design the schema for a medical center.
+
+# A medical center employs several doctors
+# A doctors can see many patients
+# A patient can be seen by many doctors
+# During a visit, a patient may be diagnosed to have one or more diseases.
+
+Doctor
+-
+emp_id PK serial
+name text index
+
+Patient
+-
+id PK serial
+name text index
+
+Visit
+-
+id PK serial
+Date timestamp
+Doctor FK >- Doctor.emp_id
+Patient FK >- Patient.id
+
+Disease
+-
+id PK serial
+name text index
+symptoms text
+treament text
+
+Diagnosis
+-
+id PK serial
+Doctor FK >- Doctor.emp_id
+Patient FK >- Patient.id
+Disease FK >- Disease.id
+Visit FK >- Visit.id
