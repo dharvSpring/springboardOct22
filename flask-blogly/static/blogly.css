@@ -1,0 +1,14 @@
+body {
+    font-size: large;
+    background-color: whitesmoke;
+    margin: 1rem;
+}
+
+label {
+    font-size: large;
+    margin-top: 1rem;
+}
+
+button, a {
+    margin-top: 1rem;
+}

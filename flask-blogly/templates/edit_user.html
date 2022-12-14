@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Editing {{ user.full_name }}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <img class="card-img-top" src="{{ user.image_url }}" alt="User Profile">
+    <div class="card-body">
+        <h5 class="card-title">{{ user.full_name }}</h5>
+        <form action="/users/{{ user.id }}/edit" method="POST">
+            <label for="first-name" class="form-label form-label-lg">First Name</label>
+            <input name="first-name" type="text" class="form-control form-control-lg"
+                   value="{{ user.first_name }}"
+                   placeholder="Enter a first name">
+            <br/>
+            <label for="last-name" class="form-label form-label-lg">Last Name</label>
+            <input name="last-name" type="text" class="form-control form-control-lg" 
+                   value="{{ user.last_name }}"
+                   placeholder="Enter a last name">
+            <br/>
+            <label for="image-url" class="form-label form-label-lg">Image URL</label>
+            <input name="image-url" type="text" class="form-control form-control-lg" 
+                   value="{{ user.image_url }}"       
+                   placeholder="Provide and image of this user">
+            <br/>
+            <button type="submit" class="btn btn-primary">Edit</button>
+            <button type="submit" class="btn btn-warning"
+                    formaction="/users/{{ user.id }}"
+                    formmethod="GET">Cancel</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
