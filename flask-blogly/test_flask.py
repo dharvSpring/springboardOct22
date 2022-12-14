@@ -125,17 +125,106 @@ class BloglyPostViewsTestCase(TestCase):
         with app.app_context():
             Post.query.delete()
             User.query.delete()
-            self.USER_IMG = "https://64.media.tumblr.com/a175e713588a8cdfc753479a7013c68a/tumblr_oymcoayh5a1sriyo0o1_1280.jpg"
-            user = User(first_name="Morticia",
-                        last_name="Addams",
-                        image_url=self.USER_IMG)
+
+            user = User(first_name="Morticia", last_name="Addams")
             db.session.add(user)
             db.session.commit()
+
+            post = Post(title="Sic gorgiamus allos subjectatos nunc", content="Not just pretty words", user_id=user.id)
+            db.session.add(post)
+            db.session.commit()
+
             self.user_id = user.id
             self.full_name = user.full_name
+            self.post_id = post.id
+            self.post_title = post.title
+            self.post_content = post.content
+            self.post_date = post.readable_date
 
     def tearDown(self):
         """Clean up any transaction data"""
 
         with app.app_context():
             db.session.rollback()
+
+    def assert_on_post(self, html, post_title, post_content, user_id=None, full_name=None):
+        """Helper method to ensure post page is correct"""
+
+        if user_id == None:
+            user_id = self.user_id
+        if full_name == None:
+            full_name = self.full_name
+        
+        self.assertIn(post_title, html)
+        self.assertIn(post_content, html)
+        self.assertIn(f'by <a href="/users/{user_id}">{full_name}</a>', html)
+
+    def test_post_view(self):
+        """Test viewing a post"""
+
+        with app.test_client() as client:
+            response = client.get(f"/posts/{self.post_id}")
+            html = response.get_data(as_text=True)
+
+            self.assert_on_post(html, self.post_title, self.post_content)
+            self.assertIn(self.post_date, html)
+    
+    def test_post_edit_view(self):
+        """Test edit view for post"""
+
+        with app.test_client() as client:
+            response = client.get(f"/posts/{self.post_id}/edit")
+            html = response.get_data(as_text=True)
+
+            self.assertIn(self.post_title, html)
+            self.assertIn(self.post_content, html)
+            self.assertIn(f'by <a href="/users/{self.user_id}">{self.full_name}</a>', html)
+
+            self.assertIn(f'<form action="/posts/{self.post_id}/edit" method="POST">', html)
+    
+    def test_post_edit_submit(self):
+        """Test edit submit for post"""
+
+        with app.test_client() as client:
+            data = {"title": "We gladly feast on those who would subdue us.", "content": "In English now"}
+            response = client.post(f"/posts/{self.post_id}/edit", data=data, follow_redirects=True)
+            html = response.get_data(as_text=True)
+
+            self.assertNotIn(self.post_title, html)
+            self.assertNotIn(self.post_content, html)
+
+            self.assert_on_post(html, data['title'], data['content'])
+
+            self.assertNotIn(f'<form action="/posts/{self.post_id}/edit" method="POST">', html)
+            self.assertIn(f'formaction="/posts/{self.post_id}/edit"', html)
+    
+    def test_post_create_view(self):
+        """Test post create view"""
+        
+        with app.test_client() as client:
+            response = client.get(f"/users/{self.user_id}/posts/new")
+            html = response.get_data(as_text=True)
+            self.assertIn(f'<form action="/users/{self.user_id}/posts/new" method="POST">', html)
+            self.assertIn(self.full_name, html)
+    
+    def test_post_create_submit(self):
+        """Test post create submit"""
+        
+        with app.test_client() as client:
+            data = {"title": "How long has it been since we waltzed?", "content": "Oh, Gomez... hours."}
+            response = client.post(f"/users/{self.user_id}/posts/new", data=data, follow_redirects=True)
+            html = response.get_data(as_text=True)
+            # new data
+            self.assert_on_post(html, data['title'], data['content'])
+
+            self.assertNotIn(f'<form action="/users/{self.user_id}/posts/new" method="POST">', html)
+
+    def test_post_delete(self):
+        """Test post delete"""
+        
+        with app.test_client() as client:
+            response = client.post(f"/posts/{self.post_id}/delete", follow_redirects=True)
+            html = response.get_data(as_text=True)
+            
+            self.assertIn(f"Deleted post {self.post_title}", html)
+            self.assertIn('<ul id="user-list">', html)
