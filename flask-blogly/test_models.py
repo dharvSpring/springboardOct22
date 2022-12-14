@@ -1,6 +1,6 @@
 from unittest import TestCase
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -38,3 +38,16 @@ class UserModelTestCase(TestCase):
             db.session.add(user)
             db.session.commit()
             self.assertEqual(user.image_url, User.DEFAULT_PROFILE_IMAGE)
+
+class PostModelTestCase(TestCase):
+    """Tests for model Post"""
+
+    def setUp(self):
+        """Clean up existing users"""
+        with app.app_context():
+            Post.query.delete()
+    
+    def tearDown(self):
+        """Clean up any remaining transaction"""
+        with app.app_context():
+            db.session.rollback()

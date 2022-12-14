@@ -12,3 +12,7 @@ label {
 button, a {
     margin-top: 1rem;
 }
+
+.by-line {
+    font-style: italic;
+}

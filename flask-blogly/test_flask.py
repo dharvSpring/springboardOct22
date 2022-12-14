@@ -1,6 +1,6 @@
 from unittest import TestCase
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -19,6 +19,7 @@ class BloglyUserViewsTestCase(TestCase):
     def setUp(self):
         """Add a sample user"""
         with app.app_context():
+            Post.query.delete()
             User.query.delete()
             self.USER_IMG = "https://64.media.tumblr.com/a175e713588a8cdfc753479a7013c68a/tumblr_oymcoayh5a1sriyo0o1_1280.jpg"
             user = User(first_name="Morticia",
@@ -113,5 +114,28 @@ class BloglyUserViewsTestCase(TestCase):
             response = client.post(f"/users/{self.user_id}/delete", follow_redirects=True)
             html = response.get_data(as_text=True)
             
-            self.assertIn(f"Deleted {self.full_name}", html)
+            self.assertIn(f"Deleted user {self.full_name}", html)
             self.assertIn('<ul id="user-list">', html)
+
+class BloglyPostViewsTestCase(TestCase):
+    """Test the post related views"""
+    
+    def setUp(self):
+        """Add a sample user"""
+        with app.app_context():
+            Post.query.delete()
+            User.query.delete()
+            self.USER_IMG = "https://64.media.tumblr.com/a175e713588a8cdfc753479a7013c68a/tumblr_oymcoayh5a1sriyo0o1_1280.jpg"
+            user = User(first_name="Morticia",
+                        last_name="Addams",
+                        image_url=self.USER_IMG)
+            db.session.add(user)
+            db.session.commit()
+            self.user_id = user.id
+            self.full_name = user.full_name
+
+    def tearDown(self):
+        """Clean up any transaction data"""
+
+        with app.app_context():
+            db.session.rollback()

@@ -9,11 +9,23 @@
     <img class="card-img-top" src="{{ user.image_url }}" alt="User Profile">
     <div class="card-body">
         <h5 class="card-title">{{ user.full_name }}</h5>
-        <p class="card-text">Other info about this user!</p>
+        <p>{{ user.bio }}</p>
+        <h5 class="card-title">Posts</h5>
+        {% if user.posts|length > 0 %}
+        <ul>
+            {% for p in user.posts %}
+            <li><a href="/posts/{{ p.id }}">{{ p.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No posts yet )=</p>
+        {% endif %}
         <form>
+            <button class="btn btn-success"
+                    formaction="/users/{{ user.id }}/posts/new">Post something!</button>
             <button class="btn btn-primary"
                     formaction="/users/{{ user.id }}/edit">Edit</button>
-            <button class="btn btn-danger"
+            <button class="btn btn-outline-danger"
                     formaction="/users/{{ user.id }}/delete"
                     formmethod="POST">Delete</button>
         </form>
