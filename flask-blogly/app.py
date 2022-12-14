@@ -82,7 +82,7 @@ def edit_user(user_id):
     first_name = request.form.get('first-name')
     last_name = request.form.get('last-name')
     image_url = request.form.get('image-url')
-    if len(image_url) < 1:
+    if image_url == None or len(image_url) < 1:
         image_url = User.DEFAULT_PROFILE_IMAGE
     
     user = User.query.get_or_404(user_id)

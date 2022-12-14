@@ -6,7 +6,7 @@ Blogly Users
 
 {% block content %}
 <h1>Users</h1>
-<ul>
+<ul id="user-list">
     {% for user in users %}
     <li><a href="/users/{{ user.id }}">{{ user.full_name }}</a></li>
     {% endfor %}
