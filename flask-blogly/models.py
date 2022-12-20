@@ -61,3 +61,33 @@ class Post(db.Model):
         """Return a user readable date"""
 
         return self.created_at.strftime("%a %b %d %Y, %-I:%M %p") # Sun Mar 01 2002, 7:33 pm
+
+class Tag(db.Model):
+    """Tag for Posts"""
+
+    def __repr__(self):
+        """Show info about tag."""
+
+        p = self
+        return f"<tag {p.id} {p.name}>"
+    
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False, unique=True)
+
+    posts = db.relationship("Post", secondary="posts_tags", backref="tags")
+
+class PostTag(db.Model):
+    """Post to Tag relationships"""
+
+    def __repr__(self):
+        """Show info about tag."""
+
+        p = self
+        return f"<post_tag {p.post_id} {p.tag_id}>"
+    
+    __tablename__ = "posts_tags"
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)

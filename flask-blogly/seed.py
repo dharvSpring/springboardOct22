@@ -1,4 +1,4 @@
-from models import User, Post
+from models import User, Post, Tag
 
 
 def seed_data(db):
@@ -18,4 +18,16 @@ def seed_data(db):
     janePost = Post(title="Jane", content="whoami", user_id=3)
     for post in (wedPost, janePost):
         db.session.add(post)
+    db.session.commit()
+
+    helloTag = Tag(name="Hello")
+    confusionTag = Tag(name="Confusion")
+    simpleTag = Tag(name="Simple")
+    for tag in (helloTag, confusionTag, simpleTag):
+        db.session.add(tag)
+    db.session.commit()
+
+    wedPost.tags.append(helloTag)
+    wedPost.tags.append(simpleTag)
+    janePost.tags.append(confusionTag)
     db.session.commit()

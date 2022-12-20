@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template, flash
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag
 from seed import seed_data
 
 app = Flask(__name__)
@@ -178,3 +178,70 @@ def delete_post(post_id):
     flash(f"Deleted post {post.title}", "success")
     
     return redirect("/users")
+
+#
+# Tags
+#
+
+@app.route("/tags")
+def list_tags():
+    """Show the list of tags"""
+
+    tags = Tag.query.order_by(Tag.name).all()
+
+    return render_template('tag_list.html', tags=tags)
+
+@app.route("/tags/new")
+def new_tag_form():
+    """Form to create new tags"""
+
+    return render_template('new_tag.html')
+
+@app.route("/tags/new", methods=['POST'])
+def create_new_tag():
+    """Create new tag"""
+
+    name = request.form.get('name')
+    new_tag = Tag(name=name)
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect("/tags")
+
+@app.route("/tags/<int:tag_id>")
+def display_tag(tag_id):
+    """Display the posts associated with tag_id"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template("tag_posts.html", tag=tag)
+
+@app.route("/tags/<int:tag_id>/edit")
+def display_tag_edit(tag_id):
+    """Display edit form for tag with tag_id"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template("edit_tag.html", tag=tag)
+
+@app.route("/tags/<int:tag_id>/edit", methods=['POST'])
+def edit_tag(tag_id):
+    """Update tag with tag_id"""
+
+    name = request.form.get('name')
+    tag = Tag.query.get_or_404(tag_id)
+    tag.name = name
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect(f"/tags/{tag_id}")
+
+@app.route("/tags/<int:tag_id>/delete", methods=['POST'])
+def delete_tag(tag_id):
+    """Delete tag with tag_id"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+
+    flash(f"Deleted tag {tag.name}", "success")
+    
+    return redirect("/tags")
