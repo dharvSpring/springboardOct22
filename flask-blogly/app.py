@@ -128,7 +128,8 @@ def new_post_form(user_id):
     """Form to create new posts"""
 
     user = User.query.get_or_404(user_id)
-    return render_template('new_post.html', user=user)
+    tags = Tag.query.all()
+    return render_template('new_post.html', user=user, tags=tags)
 
 @app.route("/users/<int:user_id>/posts/new", methods=['POST'])
 def create_new_post(user_id):
@@ -136,8 +137,11 @@ def create_new_post(user_id):
 
     title = request.form.get('title')
     content = request.form.get('content')
+    tag_ids = [int(num) for num in request.form.getlist('tags')]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
-    new_post = Post(title=title, content=content, user_id=user_id)
+    new_post = Post(title=title, content=content, user_id=user_id, tags=tags)
+
     db.session.add(new_post)
     db.session.commit()
 
@@ -148,7 +152,8 @@ def display_post_edit(post_id):
     """Display edit form for post with post_id"""
 
     post = Post.query.get_or_404(post_id)
-    return render_template('edit_post.html', post=post)
+    tags = Tag.query.all()
+    return render_template('edit_post.html', post=post, tags=tags)
 
 @app.route("/posts/<int:post_id>/edit", methods=['POST'])
 def edit_post(post_id):
@@ -156,10 +161,12 @@ def edit_post(post_id):
 
     title = request.form.get('title')
     content = request.form.get('content')
+    tag_ids = [int(num) for num in request.form.getlist('tags')]
     
     post = Post.query.get_or_404(post_id)
     post.title = title
     post.content = content
+    post.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
     # update timestamp?
 
     db.session.add(post)
@@ -206,7 +213,7 @@ def create_new_tag():
     db.session.add(new_tag)
     db.session.commit()
 
-    return redirect("/tags")
+    return redirect(f"/tags/{new_tag.id}")
 
 @app.route("/tags/<int:tag_id>")
 def display_tag(tag_id):

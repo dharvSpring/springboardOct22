@@ -4,7 +4,7 @@ body {
     margin: 1rem;
 }
 
-label {
+.form-label {
     font-size: large;
     margin-top: 1rem;
 }
@@ -15,4 +15,13 @@ button, a {
 
 .by-line {
     font-style: italic;
+}
+
+#tag-label {
+    font-weight: bold;
+    font-size: medium;
+}
+
+form > h4 {
+    margin-top: 1rem;
 }
