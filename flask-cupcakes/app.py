@@ -17,6 +17,10 @@ with app.app_context():
 
 API_PREFIX = "/api/cupcakes"
 
+#
+# All Cupcakes
+#
+
 @app.route(f"{API_PREFIX}")
 def get_all_cupcakes():
     """Return JSON info on all cupcakes"""
@@ -24,14 +28,6 @@ def get_all_cupcakes():
     cupcakes = Cupcake.query.all()
     cupcake_list = [cupcake.serialize() for cupcake in cupcakes]
     return jsonify(cupcakes=cupcake_list)
-
-@app.route(f"{API_PREFIX}/<int:cupcake_id>")
-def get_cupcake(cupcake_id):
-    """Return JSON info for given cupcake_id"""
-
-    cupcake = Cupcake.query.get_or_404(cupcake_id)
-    return jsonify(cupcake=cupcake.serialize())
-
 
 @app.route(f"{API_PREFIX}", methods=['POST'])
 def create_cupcake():
@@ -48,3 +44,38 @@ def create_cupcake():
     db.session.commit()
 
     return (jsonify(cupcake=new_cupcake.serialize()), 201)
+
+#
+# Specific Cupcake
+#
+
+@app.route(f"{API_PREFIX}/<int:cupcake_id>")
+def get_cupcake(cupcake_id):
+    """Return JSON info for given cupcake_id"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    return jsonify(cupcake=cupcake.serialize())
+
+@app.route(f"{API_PREFIX}/<int:cupcake_id>", methods=['PATCH'])
+def update_cupcake(cupcake_id):
+    """Update the given cupcake"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+    cupcake.flavor = request.json.get('flavor', cupcake.flavor)
+    cupcake.size = request.json.get('size', cupcake.size)
+    cupcake.rating = request.json.get('rating', cupcake.rating)
+    cupcake.image = request.json.get('image', cupcake.image)
+    db.session.commit()
+
+    return jsonify(cupcake=cupcake.serialize())
+
+@app.route(f"{API_PREFIX}/<int:cupcake_id>", methods=['DELETE'])
+def delete_cupcake(cupcake_id):
+    """Delete given cupcake"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(message="Deleted")
