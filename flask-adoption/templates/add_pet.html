@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add a Pet
+{% endblock %}
+
+{% block content %}
+<h1>Add a Pet</h1>
+<form id="add-pet-form" method="POST">
+    {% include '_pet_form.html' %}
+  
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button class="btn btn-outline-warning"
+                    formaction="/"
+                    formmethod="GET">Back</button>
+  </form>
+
+{% endblock %}

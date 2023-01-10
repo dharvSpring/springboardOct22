@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Adoption Agency
+{% endblock %}
+
+{% block content %}
+<h1>Pets</h1>
+{% for pet in pets %}
+<div class="card">
+    <img class="card-img-top" src="{{ pet.image_url() }}" alt="Pet Photo">
+    <div class="card-body">
+        <h5 class="card-title"><a href="/{{ pet.id }}"> {{ pet.name }} </a></h5>
+        <ul>
+            <li>Species: {{ pet.species }}</li>
+            <li>Age: 
+                {% if pet.age %}
+                    {{ pet.age }}
+                {% else %}
+                    Unknown
+                {% endif %}
+            </li>
+            <li>Notes: {{ pet.notes }}</li>
+            <li>{% if pet.available %}
+                    <span class="available">Available!</span>
+                {% else %}
+                    Pending Adoption
+                {% endif %}
+            </li>
+        </ul>
+        
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
