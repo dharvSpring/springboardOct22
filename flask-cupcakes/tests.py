@@ -144,3 +144,16 @@ class CupcakeViewsTestCase(TestCase):
             })
 
             self.assertEqual(Cupcake.query.count(), 0)
+
+    def test_404_cupcake(self):
+        with app.test_client() as client:
+            url = "/api/cupcakes/1000" # doesn't exist!
+            
+            resp = client.get(url)
+            self.assertEqual(resp.status_code, 404)
+
+            resp = client.patch(url, json=CUPCAKE_DATA_2)
+            self.assertEqual(resp.status_code, 404)
+
+            resp = client.delete(url)
+            self.assertEqual(resp.status_code, 404)

@@ -1,7 +1,8 @@
 """Flask app for Cupcakes"""
 
-from flask import Flask, request, redirect, jsonify
+from flask import Flask, request, redirect, jsonify, render_template
 from models import db, connect_db, Cupcake
+from forms import AddCupcakeForm
 from seed import seed_data
 
 app = Flask(__name__)
@@ -15,7 +16,17 @@ with app.app_context():
     db.create_all()
     seed_data(db)
 
+app.config['SECRET_KEY'] = "SECRET!"
+
 API_PREFIX = "/api/cupcakes"
+
+@app.route("/")
+def show_index():
+    """Return simple cupcake page"""
+
+    form = AddCupcakeForm()
+
+    return render_template('index.html', form=form)
 
 #
 # All Cupcakes
