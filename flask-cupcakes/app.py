@@ -1,6 +1,6 @@
 """Flask app for Cupcakes"""
 
-from flask import Flask, request, redirect, render_template, flash
+from flask import Flask, request, redirect, jsonify
 from models import db, connect_db, Cupcake
 from seed import seed_data
 
@@ -15,3 +15,36 @@ with app.app_context():
     db.create_all()
     seed_data(db)
 
+API_PREFIX = "/api/cupcakes"
+
+@app.route(f"{API_PREFIX}")
+def get_all_cupcakes():
+    """Return JSON info on all cupcakes"""
+
+    cupcakes = Cupcake.query.all()
+    cupcake_list = [cupcake.serialize() for cupcake in cupcakes]
+    return jsonify(cupcakes=cupcake_list)
+
+@app.route(f"{API_PREFIX}/<int:cupcake_id>")
+def get_cupcake(cupcake_id):
+    """Return JSON info for given cupcake_id"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+    return jsonify(cupcake=cupcake.serialize())
+
+
+@app.route(f"{API_PREFIX}", methods=['POST'])
+def create_cupcake():
+    """Create a new cupcake"""
+
+    new_cupcake = Cupcake(
+        flavor=request.json.get('flavor', None),
+        size=request.json.get('size', None),
+        rating=request.json.get('rating', None),
+        image=request.json.get('image', None),
+    )
+
+    db.session.add(new_cupcake)
+    db.session.commit()
+
+    return (jsonify(cupcake=new_cupcake.serialize()), 201)
