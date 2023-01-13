@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
 
 {% block title %}
-User {{ user.username }}
+{{ user.username }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ user.username }}</h1>
-<h2>Name: {{ user.full_name() }}</h2>
-<h2>Email: {{ user.email }}</h2>
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">{{ user.username }}</h3>
+        <p class="card-text">Name: {{ user.full_name() }}</p>
+        <p class="card-text">Email: {{ user.email }}</p>
+        {% if auth_user != None and auth_user.username == user.username %}
+            <form>
+                <button class="btn btn-primary"
+                        formaction="/users/{{ user.username }}/feedback/add">Add Feedback</button>
+                <button class="btn btn-outline-danger"
+                        formaction="/users/{{ user.username }}/delete"
+                        formmethod="POST">Delete</button>
+            </form>
+        {% endif %}
 
+        <h5 class="card-text">Feedback:</h5>
+        <ul>
+            {% for feedback in user.feedback %}
+                <li><a href="/feedback/{{ feedback.id }}">{{ feedback.title}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

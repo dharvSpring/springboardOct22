@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ feedback.title }}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">{{ feedback.title }}</h3>
+        <p class="card-text">from: <a href="/users/{{ feedback.user.username }}">{{ feedback.user.username }}</a></p>
+        <p class="card-text">{{ feedback.content }}</p>
+        {% if auth_user != None and auth_user.username == feedback.user.username %}
+            <form>
+                <button class="btn btn-primary"
+                        formaction="/feedback/{{ feedback.id }}/update">Update</button>
+                <button class="btn btn-outline-danger"
+                        formaction="/feedback/{{ feedback.id }}/delete"
+                        formmethod="POST">Delete</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
