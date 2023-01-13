@@ -1,3 +1,7 @@
 .form-group, button, h1, h5 {
     margin-top: 1rem;
 }
+
+.nav-item {
+    margin-left: 1rem;
+}

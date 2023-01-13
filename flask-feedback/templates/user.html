@@ -10,7 +10,7 @@
         <h3 class="card-title">{{ user.username }}</h3>
         <p class="card-text">Name: {{ user.full_name() }}</p>
         <p class="card-text">Email: {{ user.email }}</p>
-        {% if auth_user != None and auth_user.username == user.username %}
+        {% if auth_user != None and (auth_user.username == user.username or auth_user.is_admin) %}
             <form>
                 <button class="btn btn-primary"
                         formaction="/users/{{ user.username }}/feedback/add">Add Feedback</button>

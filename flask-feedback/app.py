@@ -3,7 +3,8 @@
 from flask import Flask, flash, request, redirect, render_template, session
 from models import db, connect_db, User, Feedback
 from forms import RegisterUserForm, LoginUserForm, AddUserFeedbackForm
-# from seed import seed_data
+from sqlalchemy.exc import IntegrityError
+from seed import seed_data
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///feedback'
@@ -14,7 +15,7 @@ connect_db(app)
 with app.app_context():
     db.drop_all()
     db.create_all()
-    # seed_data(db)
+    seed_data(db)
 
 app.config['SECRET_KEY'] = "SECRET!"
 USER_ID_KEY = "username"
@@ -44,17 +45,19 @@ def user_authenticated(username=None):
     return username == session.get(USER_ID_KEY, None)
 
 def login_error_redirect():
-    """Inform the user they are not authorized for this page and return redirect"""
-    # TODO this could be smarter
-    flash("You must be logged in to view that page!", "danger")
-    return redirect("/login")
-
+    """Inform the user they are not authorized for this page and return 401"""
+    
+    return render_template("401.html"), 401
 
 @app.route("/")
 def get_home():
     """Redirect to /register"""
 
     return redirect("/register")
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
 
 #
 # Users
@@ -64,6 +67,11 @@ def get_home():
 def handle_register():
     """Registration view"""
 
+    if user_authenticated():
+        username = session.get(USER_ID_KEY)
+        flash(f"Already signed in", "warning")
+        return redirect(f"/users/{username}")
+    
     register_form = RegisterUserForm()
     if register_form.validate_on_submit():
         new_user = User.register_user(
@@ -74,7 +82,11 @@ def handle_register():
             last_name=register_form.last_name.data,
         )
         db.session.add(new_user)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            register_form.username.errors.append('Username taken! Please pick another.')
+            return render_template('register.html', form=register_form)
 
         session[USER_ID_KEY] = new_user.username
         flash(f"Created new user {new_user.username}", "success")
@@ -86,6 +98,11 @@ def handle_register():
 @app.route("/login", methods=['GET', 'POST'])
 def handle_login():
     """Login view"""
+
+    if user_authenticated():
+        username = session.get(USER_ID_KEY)
+        flash(f"Already signed in", "warning")
+        return redirect(f"/users/{username}")
 
     login_form = LoginUserForm()
     if login_form.validate_on_submit():
@@ -133,8 +150,9 @@ def get_user_page(username):
 @app.route("/users/<username>/delete", methods=['POST'])
 def delete_user(username):
     """Allowed user to delete their account"""
-    # TODO
-    if user_authenticated(username):
+
+    auth_user = get_authenticated_user()
+    if user_authenticated(auth_user.username) or auth_user.is_admin:
         user = User.query.get_or_404(username)
         db.session.delete(user)
         db.session.commit()
@@ -151,10 +169,11 @@ def delete_user(username):
 def add_user_feedback(username):
     """Allow user to add feedback"""
 
-    if user_authenticated(username):
+    auth_user = get_authenticated_user()
+    if user_authenticated(auth_user.username) or auth_user.is_admin:
         feedback_form = AddUserFeedbackForm()
         if feedback_form.validate_on_submit():
-            new_feedback = Feedback(
+            new_feedback = Feedback.register_feedback(
                 title=feedback_form.title.data,
                 content=feedback_form.content.data,
                 username=username,
@@ -172,7 +191,7 @@ def add_user_feedback(username):
 @app.route("/feedback/<int:feedback_id>")
 def show_user_feedback(feedback_id):
     """Display the user feedback"""
-    
+
     feedback = Feedback.query.get_or_404(feedback_id)
     auth_user = get_authenticated_user()
 
@@ -184,19 +203,19 @@ def update_user_feedback(feedback_id):
     """User can update their feedback"""
     
     feedback = Feedback.query.get_or_404(feedback_id)
-    user = feedback.user
+    auth_user = get_authenticated_user()
 
-    if user_authenticated(user.username):
+    if user_authenticated(auth_user.username) or auth_user.is_admin:
         feedback_form = AddUserFeedbackForm(obj=feedback)
         if feedback_form.validate_on_submit():
             feedback.title = feedback_form.title.data
             feedback.content = feedback_form.content.data
             db.session.commit()
 
-            flash("Feedback udpated!", "success")
-            return redirect(f"/users/{user.username}")
+            flash("Feedback updated!", "success")
+            return redirect(f"/users/{feedback.username}")
     
-        return render_template("update_feedback.html", form=feedback_form, username=user.username)
+        return render_template("update_feedback.html", form=feedback_form, username=feedback.username)
     else:
         return login_error_redirect()
 
@@ -205,13 +224,13 @@ def delete_feedback(feedback_id):
     """Allowed user to delete their feedback"""
     
     feedback = Feedback.query.get_or_404(feedback_id)
-    user = feedback.user
+    auth_user = get_authenticated_user()
 
-    if user_authenticated(user.username):
+    if user_authenticated(auth_user.username) or auth_user.is_admin:
         db.session.delete(feedback)
         db.session.commit()
 
         flash("Feedback deleted!", "success")
-        return redirect(f"/users/{user.username}")
+        return redirect(f"/users/{feedback.username}")
     else:
         return login_error_redirect()

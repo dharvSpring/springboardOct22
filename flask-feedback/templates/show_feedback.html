@@ -10,7 +10,7 @@
         <h3 class="card-title">{{ feedback.title }}</h3>
         <p class="card-text">from: <a href="/users/{{ feedback.user.username }}">{{ feedback.user.username }}</a></p>
         <p class="card-text">{{ feedback.content }}</p>
-        {% if auth_user != None and auth_user.username == feedback.user.username %}
+        {% if auth_user != None and (auth_user.username == feedback.user.username or auth_user.is_admin) %}
             <form>
                 <button class="btn btn-primary"
                         formaction="/feedback/{{ feedback.id }}/update">Update</button>

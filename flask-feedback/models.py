@@ -23,6 +23,7 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False, unique=True)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def full_name(self):
         """Concatenates the first and last name for display"""
@@ -30,7 +31,7 @@ class User(db.Model):
         return f"{self.first_name} {self.last_name}"
 
     @classmethod
-    def register_user(cls, username, password, email, first_name, last_name):
+    def register_user(cls, username, password, email, first_name, last_name, is_admin=False):
         """Create the User"""
 
         hashed_pwd = bcrypt.generate_password_hash(password)
@@ -43,6 +44,7 @@ class User(db.Model):
             email=email,
             first_name=first_name,
             last_name=last_name,
+            is_admin=is_admin,
             )
         return new_user
     
@@ -71,3 +73,14 @@ class Feedback(db.Model):
     username = db.Column(db.String(20), db.ForeignKey('users.username'))
 
     user = db.relationship('User', backref='feedback')
+
+    @classmethod
+    def register_feedback(cls, title, content, username):
+        """Create feedback"""
+
+        new_feedback = cls(
+            title=title,
+            content=content,
+            username=username,
+        )
+        return new_feedback
