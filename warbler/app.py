@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g, url_for
+from flask import Flask, render_template, request, flash, redirect, session, g, url_for, abort
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -211,6 +211,47 @@ def stop_following(follow_id):
     return redirect(f"/users/{g.user.id}/following")
 
 
+@app.route('/users/add_like/<int:message_id>', methods=['POST'])
+def toggle_like(message_id):
+    """Toggle like on the given message for the currently-logged-in user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    liked_message = Message.query.get_or_404(message_id)
+    if liked_message.user_id == g.user.id:
+        return abort(403)
+
+    if liked_message in g.user.likes:
+        g.user.likes.remove(liked_message)
+    else:
+        g.user.likes.append(liked_message)
+    db.session.commit()
+
+    return redirect(f"/users/{g.user.id}/likes")
+
+
+@app.route('/users/<int:user_id>/likes')
+def show_likes(user_id):
+    """Show list of warbles this user has like."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    user = User.query.get_or_404(user_id)
+    liked_msgs_id =  [msg.id for msg in user.likes]
+    liked_messages = (Message
+                      .query
+                      .filter(Message.id.in_(liked_msgs_id))
+                      .order_by(Message.timestamp.desc())
+                      .limit(100)
+                      .all())
+
+    return render_template("/users/likes.html", user=g.user, messages=liked_messages)
+
+
 @app.route('/users/profile', methods=["GET", "POST"])
 def profile():
     """Update profile for current user."""
@@ -234,9 +275,8 @@ def profile():
         
         flash("Password doesn't match!", 'danger')
 
-    return render_template(f"/users/edit.html", form=profile_form, user_id=g.user.id)
+    return render_template("/users/edit.html", form=profile_form, user_id=g.user.id)
     
-
 
 @app.route('/users/delete', methods=["POST"])
 def delete_user():
@@ -323,8 +363,9 @@ def homepage():
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
+        likes = [msg.id for msg in g.user.likes]
 
-        return render_template('home.html', messages=messages)
+        return render_template('home.html', messages=messages, likes=likes)
 
     else:
         return render_template('home-anon.html')
