@@ -1,0 +1,31 @@
+# warbler models
+# quickdatabasediagrams.com
+
+User
+-
+id PK serial
+email Unique
+username Unique
+image_url URL
+header_image_url URL
+bio text
+location text
+password hashed
+
+Messages
+-
+id PK serial
+text text
+timestamp datetime
+user_id FK >-< User.id
+
+Follows
+-
+user_being_followed_id FK >-< User.id
+user_following_id FK >-< User.id
+
+Likes
+-
+id PK serial
+user_id FK >-< User.id
+message_id FK >-< Messages.id
