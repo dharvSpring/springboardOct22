@@ -1,0 +1,75 @@
+body {
+    background-color: green;
+    text-align: center;
+}
+
+#new-card {
+    padding: 1rem;
+    background-color: darkblue;
+    border-radius: 1rem;
+    font-size: larger;
+    font-weight: bold;
+    color: white;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#new-card:hover {
+    background-color: cornflowerblue;
+    color: darkblue;
+}
+
+#new-card:disabled {
+    background-color: lightgray;
+    color: black;
+}
+
+#dealt-cards {
+    padding: 1rem;
+}
+
+.card {
+    position: absolute;
+    margin-top: 1rem;
+    margin-left: -113px;
+}
+
+.rotate-5 {
+    transform: rotate(5deg);
+}
+
+.rotate-10 {
+    transform: rotate(10deg);
+}
+
+.rotate-15 {
+    transform: rotate(15deg);
+}
+
+.rotate-20 {
+    transform: rotate(20deg);
+}
+
+.rotate-25 {
+    transform: rotate(25deg);
+}
+
+.rotate-355 {
+    transform: rotate(355deg);
+}
+
+.rotate-350 {
+    transform: rotate(350deg);
+}
+
+.rotate-345 {
+    transform: rotate(345deg);
+}
+
+.rotate-340 {
+    transform: rotate(340deg);
+}
+
+.rotate-335 {
+    transform: rotate(335deg);
+}
