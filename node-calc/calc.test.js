@@ -2,48 +2,25 @@ const calc = require('./calc');
 
 describe('Calculation tests', () => {
 
-    test('Count cat in the hat', () => {
-        const mm = new MarkovMachine("the cat in the hat");
-        const mmText = mm.makeText(50);
-        expect(mmText).toEqual(expect.any(String));
+    let numsOdd;
+    let numsEven;
+    beforeEach(() => {
+        numsOdd = [3, 2, 1];
+        numsEven = [1, 3, 2, 3, 1, 4];
+    })
 
-        const mmWords = mmText.split(' ');
-        expect(mmWords.length).toEqual(50);
+    test('mean test', () => {
+        expect(calc.mean(numsOdd)).toEqual(2);
+        expect(calc.mean(numsEven)).toEqual(expect.closeTo(2.33333, 5));
     });
 
-    test('Verify cat in the hat words', () => {
-        const mm = new MarkovMachine("the cat in the hat");
-        const mmText = mm.makeText(50);
-        const mmWords = mmText.split(' ');
-
-        const expectedWords = "the cat in the hat".split(' ');
-        for (w of mmWords) {
-            expect(expectedWords).toContainEqual(w);
-        }
-
-    }); 
-});
-
-describe('Validation tests', () => {
-
-    test('Count cat in the hat', () => {
-        const mm = new MarkovMachine("the cat in the hat");
-        const mmText = mm.makeText(50);
-        expect(mmText).toEqual(expect.any(String));
-
-        const mmWords = mmText.split(' ');
-        expect(mmWords.length).toEqual(50);
+    test('median test', () => {
+        expect(calc.median(numsOdd)).toEqual(2);
+        expect(calc.median(numsEven)).toEqual(2.5);
     });
 
-    test('Verify cat in the hat words', () => {
-        const mm = new MarkovMachine("the cat in the hat");
-        const mmText = mm.makeText(50);
-        const mmWords = mmText.split(' ');
-
-        const expectedWords = "the cat in the hat".split(' ');
-        for (w of mmWords) {
-            expect(expectedWords).toContainEqual(w);
-        }
-
-    }); 
+    test('mode test', () => {
+        expect(calc.mode(numsOdd)).toEqual(3);
+        expect(calc.mode(numsEven)).toEqual(1);
+    });
 });
