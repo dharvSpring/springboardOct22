@@ -10,6 +10,11 @@ class Item {
         items.push(this);
     }
 
+    // equals(other) {
+    //     return this.name == other.name
+    //             && this.price == other.price;
+    // }
+
     static all() {
         return items;
     }
