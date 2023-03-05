@@ -16,7 +16,6 @@ const client = new Client({
 });
 
 async function connect() {
-    console.log('connecting')
     await client.connect();
 }
 connect();
