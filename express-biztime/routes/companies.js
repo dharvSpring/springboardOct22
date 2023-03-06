@@ -6,6 +6,8 @@ const ExpressError = require('../expressError')
 
 const companyTable = 'companies';
 const invoiceTable = 'invoices';
+const industriesTable = 'industries'
+const industriesCompaniesTable = 'companies_industries'
 
 // CREATE TABLE companies (
 //     code text PRIMARY KEY,
@@ -43,15 +45,19 @@ router.get("/", async function(req, res, next) {
  * GET /companies/[code]
  * If the company given cannot be found, this should return a 404 status response.
  * 
- * Return obj of company: {company: {code, name, description, invoices: [id, ...]}}
+ * Return obj of company: {company: {code, name, description, invoices: [id, ...], industries: [ind_name, ...]}}
  */
 router.get("/:code", async function(req, res, next) {
     try {
         const code = req.params.code;
         const result = await db.query(
-            `SELECT code, name, description
-            FROM ${companyTable}
-            WHERE code = $1`,
+            `SELECT c.code, c.name, c.description, i.name as ind_name
+            FROM ${companyTable} as c
+            LEFT JOIN ${industriesCompaniesTable} as ic
+            ON c.code = ic.comp_code
+            LEFT JOIN ${industriesTable} as i
+            ON ic.ind_code = i.code
+            WHERE c.code = $1`,
             [code]
         );
 
@@ -59,7 +65,7 @@ router.get("/:code", async function(req, res, next) {
             throw new ExpressError(`Company not found: ${code}`, 404);
         }
 
-        const invoices = await db.query(
+        const invoiceResults = await db.query(
             `SELECT id
             FROM ${invoiceTable}
             WHERE comp_code=$1`,
@@ -67,9 +73,16 @@ router.get("/:code", async function(req, res, next) {
         );
 
         const companyInfo = result.rows[0];
-        companyInfo.invoices = invoices.rows.map(inv => inv.id);
+        const invoices = invoiceResults.rows.map(inv => inv.id);
+        const industries = result.rows.map(c => (c.ind_name ? c.ind_name : undefined));
 
-        return res.json({'company': companyInfo});
+        return res.json({'company': {
+            code: companyInfo.code,
+            name: companyInfo.name,
+            description: companyInfo.description,
+            invoices,
+            industries: industries[0] ? industries : [],
+        }});
     } catch (err) {
         return next(err);
     }

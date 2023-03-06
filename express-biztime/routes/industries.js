@@ -6,9 +6,9 @@ const ExpressError = require('../expressError')
 
 const companyTable = 'companies';
 const industriesTable = 'industries'
-const industriesCompaniesTable = 'industries_companies'
+const industriesCompaniesTable = 'companies_industries'
 
-// CREATE TABLE companies (
+// CREATE TABLE industries (
 //     code text PRIMARY KEY,
 //     name text NOT NULL UNIQUE,
 //     description text
@@ -18,23 +18,30 @@ const industriesCompaniesTable = 'industries_companies'
 /**
  * GET /industries
  * 
- * Returns list of industries with company codes, like {industries: [{ind_code, companies: [comp_code, ...]}, ...]}
+ * Returns list of industries with company codes, like {industries: [{code, companies: [comp_code, ...]}, ...]}
  */
 router.get("/", async function(req, res, next) {
     try {
+
         const result = await db.query(
-            `SELECT i.code, c.code
+            `SELECT i.code, ic.comp_code
             FROM ${industriesTable} AS i
             LEFT JOIN ${industriesCompaniesTable} AS ic
             ON i.code = ic.ind_code
-            JOIN ${companyTable} as c
-            ON c.code = ic.comp_code
             ORDER BY i.code`
         );
 
-        // TODO transform the data
+        const indMap = new Map();
+        for (ind of result.rows) {
+            if (indMap.has(ind.code)) {
+                indMap.get(ind.code).push(ind.comp_code);
+            } else {
+                indMap.set(ind.code, ind.comp_code ? [ind.comp_code] : []);
+            }
+        }
+        const industries = Array.from(indMap.keys()).map(code => ({code, companies: indMap.get(code)}));
 
-        return res.json({'companies': result.rows});
+        return res.json({'industries': industries});
     } catch (err) {
         return next(err);
     }
@@ -43,16 +50,19 @@ router.get("/", async function(req, res, next) {
 
 /**
  * GET /industries/[code]
- * If the company given cannot be found, this should return a 404 status response.
+ * If the industry given cannot be found, this should return a 404 status response.
  * 
  * Return obj of industry: {industry: {ind_code, name, description, companies: [comp_code, ...]}}
  */
 router.get("/:code", async function(req, res, next) {
     try {
         const ind_code = req.params.code;
+        console.log(ind_code)
         const result = await db.query(
-            `SELECT code, name, description
-            FROM ${industriesTable}
+            `SELECT i.code, i.name, i.description, ic.comp_code
+            FROM ${industriesTable} AS i
+            LEFT JOIN ${industriesCompaniesTable} AS ic
+            ON i.code = ic.ind_code
             WHERE code = $1`,
             [ind_code]
         );
@@ -61,17 +71,15 @@ router.get("/:code", async function(req, res, next) {
             throw new ExpressError(`Industry not found: ${ind_code}`, 404);
         }
 
-        const companies = await db.query(
-            `SELECT code
-            FROM ${companyTable}
-            WHERE ind_code=$1`,
-            [ind_code]
-        );
+        const indInfo = result.rows[0];
+        const companies = result.rows.map(c => c.comp_code);
 
-        const industryInfo = result.rows[0];
-        industryInfo.companies = companies.rows.map(c => c.code);
-
-        return res.json({'industry': industryInfo});
+        return res.json({'industry': {
+            code: indInfo.code,
+            name: indInfo.name,
+            description: indInfo.description,
+            companies: companies,
+        }});
     } catch (err) {
         return next(err);
     }
@@ -81,14 +89,15 @@ router.get("/:code", async function(req, res, next) {
 /**
  * POST /industries
  * Adds a industry.
- * Needs to be given JSON like: {ind_code, name, description}
+ * Needs to be given JSON like: {code, name, description}
+ * Code is optional, if absent will slugify name
  * 
- * Returns obj of new company: {industry: {ind_code, name, description}}
+ * Returns obj of new industry: {industry: {code, name, description}}
  */
 router.post("/", async function(req, res, next) {
     try {
-        const  {ind_code, name, description} = req.body;
-        // const code = slugify(name, {lower: true});
+        const  {code, name, description} = req.body;
+        const ind_code = code ? code : slugify(name, {lower: true});
         const result = await db.query(
             `INSERT INTO ${industriesTable}
             (code, name, description)
@@ -97,7 +106,7 @@ router.post("/", async function(req, res, next) {
             [ind_code, name, description]
         );
 
-        return res.status(201).json({'company': result.rows[0]});
+        return res.status(201).json({'industry': result.rows[0]});
     } catch (err) {
         return next(err);
     }
@@ -106,18 +115,18 @@ router.post("/", async function(req, res, next) {
 
 /**
  * PUT /industries/[code]
- * Edit existing company.
- * Should return 404 if company cannot be found.
+ * Edit existing industry.
+ * Should return 404 if industry cannot be found.
  * Needs to be given JSON like: {name, description}
  * 
- * Returns update company object: {industry: {ind_code, name, description}}
+ * Returns update industry object: {industry: {code, name, description}}
  */
 router.put("/:code", async function(req, res, next) {
     try {
         const code = req.params.code;
         const  {name, description} = req.body;
         const result = await db.query(
-            `UPDATE ${companyTable}
+            `UPDATE ${industriesTable}
             SET name=$1, description=$2
             WHERE code = $3
             RETURNING code, name, description`,
@@ -125,10 +134,10 @@ router.put("/:code", async function(req, res, next) {
         );
 
         if (result.rows.length === 0) {
-            throw new ExpressError(`Company not found: ${code}`, 404);
+            throw new ExpressError(`Industry not found: ${code}`, 404);
         }
 
-        return res.json({'company': result.rows[0]});
+        return res.json({'industry': result.rows[0]});
     } catch (err) {
         return next(err);
     }
@@ -138,29 +147,70 @@ router.put("/:code", async function(req, res, next) {
 /**
  * DELETE /industries/[code]
  * Deletes industry.
- * Should return 404 if company cannot be found.
+ * Should return 404 if industry cannot be found.
  * 
  * Returns {status: "deleted"}
  */
-// router.delete("/:code", async function(req, res, next) {
-//     try {
-//         const code = req.params.code;
-//         const result = await db.query(
-//             `DELETE FROM ${industriesTable}
-//             WHERE code = $1
-//             RETURNING code`,
-//             [code]
-//         );
+router.delete("/:code", async function(req, res, next) {
+    try {
+        const code = req.params.code;
+        const result = await db.query(
+            `DELETE FROM ${industriesTable}
+            WHERE code = $1
+            RETURNING code`,
+            [code]
+        );
 
-//         if (result.rows.length === 0) {
-//             throw new ExpressError(`Industry not found: ${code}`, 404);
-//         }
+        if (result.rows.length === 0) {
+            throw new ExpressError(`Industry not found: ${code}`, 404);
+        }
 
-//         return res.json({status: "deleted"});
-//     } catch (err) {
-//         return next(err);
-//     }
-// });
+        return res.json({status: "deleted"});
+    } catch (err) {
+        return next(err);
+    }
+});
+
+
+/**
+ * POST /industries/[code]/add
+ * Adds a company to industry.
+ * Needs to be given JSON like: {comp_code}
+ * Should return 404 if industry or company cannot be found.
+ * 
+ * Returns {added: {comp_code, ind_code}}
+ */
+router.post("/:code/add", async function(req, res, next) {
+    try {
+        const code = req.params.code;
+        const comp_code = req.body.comp_code;
+        
+        const checkExists = await Promise.all([
+            db.query(`SELECT code FROM ${industriesTable} WHERE code=$1`, [code]),
+            db.query(`SELECT code FROM ${companyTable} WHERE code=$1`, [comp_code]),
+        ]);
+
+        if (checkExists[0].rows.length === 0) {
+            throw new ExpressError(`Industry not found: ${code}`, 404);
+        }
+
+        if (checkExists[1].rows.length === 0) {
+            throw new ExpressError(`Company not found: ${comp_code}`, 404);
+        }
+
+        const result = await db.query(
+            `INSERT INTO ${industriesCompaniesTable}
+            (comp_code, ind_code)
+            VALUES ($1, $2)
+            RETURNING comp_code, ind_code`,
+            [comp_code, code]
+        );
+
+        return res.status(201).json({'added': result.rows[0]});
+    } catch (err) {
+        return next(err);
+    }
+});
 
 
 module.exports = router;

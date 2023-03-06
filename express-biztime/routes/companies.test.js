@@ -39,6 +39,7 @@ describe('companies routing tests', () => {
                 name: ibm.name,
                 description: ibm.description,
                 invoices: [1, 2],
+                industries: [],
             }
         });
     });
