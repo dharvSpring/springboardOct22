@@ -1,5 +1,6 @@
 /** Customer for Lunchly */
 
+const e = require("express");
 const db = require("../db");
 const Reservation = require("./reservation");
 
@@ -12,6 +13,22 @@ class Customer {
     this.lastName = lastName;
     this.phone = phone;
     this.notes = notes;
+  }
+
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(val) {
+    if (val) {
+      this._notes = val;
+    } else {
+      this._notes = '';
+    }
   }
 
   /** find all customers. */
@@ -51,6 +68,47 @@ class Customer {
     }
 
     return new Customer(customer);
+  }
+
+  /** search for customers by name */
+
+  static async findName(name) {
+    const queryName = `%${name}%`;
+    const results = await db.query(
+      `SELECT id,
+        first_name AS "firstName",
+        last_name AS "lastName",
+        phone,
+        notes
+      FROM customers
+      WHERE (first_name ILIKE $1
+        OR last_name ILIKE $1)`,
+      [queryName]
+    );
+    const custResults = results.rows.map(c => new Customer(c))
+
+    return custResults;
+  }
+
+  /** retrieve top customers by number of reservations */
+
+  static async topCustomers() {
+    const results = await db.query(
+      `SELECT c.id,
+        c.first_name AS "firstName",
+        c.last_name AS "lastName",
+        c.phone,
+        c.notes
+      FROM customers AS c
+      JOIN reservations AS r
+        ON c.id = r.customer_id
+      GROUP BY c.id
+      ORDER BY COUNT(c.id) DESC
+      LIMIT 10`
+    );
+    const custResults = results.rows.map(c => new Customer(c))
+
+    return custResults;
   }
 
   /** get all reservations for this customer. */
