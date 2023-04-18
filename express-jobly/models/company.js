@@ -61,6 +61,60 @@ class Company {
     return companiesRes.rows;
   }
 
+ /** Find companies which match the filter
+  * 
+  * name: case insensitive match if company name contains name
+  * minEmp: minimum employees, inclusive
+  * maxEmp: maximum employees, inclusive
+  * 
+  * Throws BadRequestError if minEmp > maxEmp
+  * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+  **/
+
+  static async findFilter(name, minEmp, maxEmp) {
+    let where = 'WHERE ';
+    const whereVars = [];
+    if (name) {
+      whereVars.push(`%${name}%`);
+      where += `name ILIKE $${whereVars.length} `;
+    }
+    console.log(where, whereVars);
+
+    if (minEmp && maxEmp && minEmp > maxEmp) {
+      throw new BadRequestError(`minEmployees (${minEmp}) cannot be greater than maxEmployees (${maxEmp})`);
+    }
+
+    if (minEmp) {
+      whereVars.push(minEmp);
+      where += `${whereVars.length > 1 ? 'AND ' : ''} num_employees >= $${whereVars.length} `;
+    }
+    console.log(where, whereVars);
+
+    if (maxEmp) {
+      whereVars.push(maxEmp);
+      where += `${whereVars.length > 1 ? 'AND ' : ''} num_employees <= $${whereVars.length} `;
+    }
+    console.log(where, whereVars);
+
+    if (whereVars.length === 0) {
+      where = '';
+    }
+    console.log(where);
+
+    const companiesRes = await db.query(
+          `SELECT handle,
+                  name,
+                  description,
+                  num_employees AS "numEmployees",
+                  logo_url AS "logoUrl"
+            FROM companies
+            ${where}
+            ORDER BY name`,
+            whereVars);
+    return companiesRes.rows;
+  }
+  
+
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
