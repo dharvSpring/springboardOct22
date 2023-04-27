@@ -140,6 +140,7 @@ describe("get", function () {
       lastName: "U1L",
       email: "u1@email.com",
       isAdmin: false,
+      jobs: [],
     });
   });
 
@@ -222,6 +223,47 @@ describe("remove", function () {
   test("not found if no such user", async function () {
     try {
       await User.remove("nope");
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
+/************************************** applyForJob */
+
+describe("applyForJob", function () {
+  let jobId;
+  beforeEach(async function() {
+    const jobRes = await db.query(
+        `SELECT id FROM jobs
+        LIMIT 1`);
+    jobId = jobRes.rows[0].id;
+  });
+
+  test("works", async function () {
+    await User.applyForJob("u1", jobId);
+    const userApps = await db.query(
+      `SELECT job_id
+       FROM applications
+       WHERE username = 'u1'`
+    );
+    expect(userApps.rows.length).toEqual(1);
+    expect(userApps.rows[0]).toEqual({"job_id": jobId});
+  });
+
+  test("not found if no such user", async function () {
+    try {
+      await User.applyForJob("nope", jobId);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("not found if no such job", async function () {
+    try {
+      await User.applyForJob("u1", 987654321);
       fail();
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
