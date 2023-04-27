@@ -78,7 +78,6 @@ class Company {
       whereVars.push(`%${name}%`);
       where += `name ILIKE $${whereVars.length} `;
     }
-    console.log(where, whereVars);
 
     if (minEmp && maxEmp && minEmp > maxEmp) {
       throw new BadRequestError(`minEmployees (${minEmp}) cannot be greater than maxEmployees (${maxEmp})`);
@@ -88,18 +87,15 @@ class Company {
       whereVars.push(minEmp);
       where += `${whereVars.length > 1 ? 'AND ' : ''} num_employees >= $${whereVars.length} `;
     }
-    console.log(where, whereVars);
 
     if (maxEmp) {
       whereVars.push(maxEmp);
       where += `${whereVars.length > 1 ? 'AND ' : ''} num_employees <= $${whereVars.length} `;
     }
-    console.log(where, whereVars);
 
     if (whereVars.length === 0) {
       where = '';
     }
-    console.log(where);
 
     const companiesRes = await db.query(
           `SELECT handle,
@@ -118,7 +114,7 @@ class Company {
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
-   *   where jobs is [{ id, title, salary, equity, companyHandle }, ...]
+   *   where jobs is [{ id, title, salary, equity }, ...]
    *
    * Throws NotFoundError if not found.
    **/
@@ -137,6 +133,16 @@ class Company {
     const company = companyRes.rows[0];
 
     if (!company) throw new NotFoundError(`No company: ${handle}`);
+
+    const jobsRes = await db.query(
+          `SELECT id, title, salary, equity
+          FROM jobs
+          WHERE company_handle = $1
+          ORDER BY id`,
+        [handle],
+    );
+
+    company.jobs = jobsRes.rows;
 
     return company;
   }
