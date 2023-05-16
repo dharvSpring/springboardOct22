@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`card snapshot w/ props 1`] = `
+<DocumentFragment>
+  <div
+    class="Card"
+  >
+    <h4
+      class="Card-title"
+    >
+      test
+    </h4>
+    <img
+      alt="test"
+      class="Card-image"
+      src="text"
+    />
+    <small
+      class="Card-small"
+    >
+      Image 1 of 1.
+    </small>
+  </div>
+</DocumentFragment>
+`;
