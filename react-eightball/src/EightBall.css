@@ -1,0 +1,8 @@
+.EightBall {
+    text-align: center;
+    flex-wrap: wrap;
+    color: aliceblue;
+    margin: 2rem;
+    padding: 8rem;
+    clip-path: circle(8rem);
+}
