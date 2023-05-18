@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cell comp tests snapshot isLit 1`] = `<DocumentFragment />`;
+
+exports[`Cell comp tests snapshot not isLit 1`] = `<DocumentFragment />`;
