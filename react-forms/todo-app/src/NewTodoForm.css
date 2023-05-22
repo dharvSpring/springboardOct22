@@ -1,0 +1,7 @@
+.NewTodoForm {
+    margin: 1rem;
+}
+
+.NewTodoForm > input {
+    margin: 1rem;
+}

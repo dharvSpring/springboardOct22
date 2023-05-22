@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="Box"
+  >
+    <div
+      style="background-color: cornflowerblue; width: 100px; height: 100px;"
+    />
+    <button>
+      Remove Me!
+    </button>
+  </div>
+</DocumentFragment>
+`;
