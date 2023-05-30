@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+}
+
+.App-NavBar {
+  padding: 1rem;
+}
+
+.App-NavBar a {
+  margin: 0.5rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.App-NavBar a.active {
+  color: slateblue;
+  font-weight: bold;
+}
