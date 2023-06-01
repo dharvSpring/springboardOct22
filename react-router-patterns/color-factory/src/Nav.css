@@ -1,0 +1,10 @@
+.Nav {
+    padding: 1rem;
+    background-color: black;
+    color: whitesmoke;
+}
+
+.Nav a {
+    color: whitesmoke;
+    font-size: large;
+}
