@@ -1,0 +1,14 @@
+.Nav {
+    margin: 1rem;
+}
+
+.Nav a {
+    font-size: larger;
+    color: rgba(0,0,0,0.75);
+    margin: 1rem;
+}
+
+.Nav a.active {
+    color: black;
+    font-weight: bold;
+}

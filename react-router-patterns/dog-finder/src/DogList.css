@@ -1,0 +1,14 @@
+.DogList-dog {
+    margin: 1rem;
+}
+
+.DogList-dog img {
+    width: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.DogList-dog a {
+    display: block;
+}
