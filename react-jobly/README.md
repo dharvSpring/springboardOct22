@@ -1,5 +1,5 @@
 # React Jobly
 
-Jonly Frontend in React using reactstrap
+Jobly Frontend in React using reactstrap
 
 deployed?
