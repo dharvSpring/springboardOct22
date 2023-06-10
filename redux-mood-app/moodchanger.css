@@ -1,0 +1,13 @@
+body {
+    text-align: center;
+}
+
+#mood {
+    font-size: x-large;
+    margin-bottom: 2rem;
+}
+
+button {
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+}
