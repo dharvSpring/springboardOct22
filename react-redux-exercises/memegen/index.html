@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css" />
+        <title>Meme Generator</title>
+    </head>
+    <body>
+        <h1>Meme Generator</h1>
+        <form id="src-form">
+            <label for="image">Image Source:</label>
+            <input id="image-src" name="image" type="text" placeholder="Image URL">
+            <br />
+            <label for="top-text">Top Text:</label>
+            <input id="top-text" name="top-text" type="text" placeholder="Top Text">
+            <br />
+            <label for="bottom-text">Bottom Text:</label>
+            <input id="bottom-text" name="bottom-text" type="text" placeholder="Bottom Text">
+            <br />
+            <input type="submit" value="Meme it!">
+        </form>
+        <div id="memes">
+            <!-- memes go here -->
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.js"></script>
+        <script src="RootReducer.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>

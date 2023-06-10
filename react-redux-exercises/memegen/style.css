@@ -1,0 +1,71 @@
+/* Color Palette https://www.color-hex.com/color-palette/80753 */
+/* CSS Gradient Generator https://cssgradient.io/ */
+
+body {
+    background-color: #035ee8;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(151,0,204,1) 50%, rgba(246,1,157,1) 100%);
+    text-align: center;
+    font-family: sans-serif;
+    color: white;
+    margin: 50px;
+}
+
+h1 {
+    font-size: xxx-large;
+}
+
+.meme-text {
+    position: relative;
+    color: white;
+    font-weight: bold;
+    font-size: xxx-large;
+    font-family: Impact;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+}
+
+.top-text {
+    top: 75px;
+    margin-top: -20px;
+}
+
+.bottom-text {
+    bottom: 75px;
+    margin-bottom: -50px;
+}
+
+.meme {
+    position: relative;
+}
+
+img {
+    width: 66vw;
+}
+
+form > input, label {
+    margin: 5px;
+    display: inline-block;
+}
+
+label {
+    width: 20%;
+    text-align: right;
+    font-weight: bold;
+    color: white;
+}
+
+input[type='text'] {
+    width: 30%;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+input[type='submit'], button {
+    width: 20%;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: large;
+    color: white;
+    background-color: #d40078;
+}
