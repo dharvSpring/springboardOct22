@@ -2,4 +2,6 @@
 
 Jobly Frontend in React using reactstrap
 
-deployed?
+Deployed on Render and Surge
+
+[Check it out!](https://huge-potato.surge.sh/)
